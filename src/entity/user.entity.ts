@@ -29,7 +29,30 @@ export class UserModel {
   id: number;
 
   // 제목
-  @Column()
+  @Column({
+    // 데이터베이스에서 인지하는 칼럼 타입
+    // 자동으로 유추됨 => 특정한 타입을 원할 경우 직접 입력
+    type: 'varchar',
+    // 데이터베이스 칼럼 이름
+    // 프로퍼티 이름으로 부터 자동 유추됨
+    name: 'title',
+    // 값의 길이
+    // 입력 할 수 있는 글자의 길이가 300
+    length: 300,
+    // null 허용 여부
+    nullable: true,
+    // true면 처음 저장할 때만 값 저장 가능
+    // 이후에는 값 변경 불가능
+    update: true,
+    // find()를 실행할 때 기본으로 값을 불러올지 여부
+    // 기본값이 true
+    select: false,
+    // 아무것도 입력하지 않았을 때 기본으로 입력되게 하는 값
+    default: 'default value',
+    // 칼럼중 유일무이한 값이 되어야 하는지 여부
+    // 기본값은 false
+    unique: false,
+  })
   title: string;
 
   // 데이터 생성 일자

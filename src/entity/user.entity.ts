@@ -3,6 +3,8 @@ import {
   CreateDateColumn,
   Entity,
   Generated,
+  JoinColumn,
+  OneToMany,
   OneToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
@@ -10,6 +12,7 @@ import {
   VersionColumn,
 } from 'typeorm';
 import { ProfileModel } from './profile.entity';
+import { PostModel } from './post.entity';
 
 export enum Role {
   USER = 'user',
@@ -92,6 +95,11 @@ export class UserModel {
   // Generated Annotation은 Column Annotation과 항상 같이 사용해야 한다.
   @Generated('uuid')
   additionalId: string;
+
   @OneToOne(() => ProfileModel, (profile) => profile.user)
+  @JoinColumn()
   profile: ProfileModel;
+
+  @OneToMany(() => PostModel, (post) => post.author)
+  posts: PostModel[];
 }

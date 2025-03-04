@@ -13,7 +13,7 @@ export class ProfileModel {
   id: number;
 
   @OneToOne(() => UserModel, (user) => user.profile)
-  @JoinColumn()
+  // @JoinColumn()
   user: UserModel;
 
   @Column()

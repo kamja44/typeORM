@@ -22,25 +22,60 @@ export class AppController {
   @Post('users')
   postUser() {
     return this.userRepository.save({
-      // title: 'test title',
-      // role: Role.ADMIN,
+      email: '1234@naver.com',
     });
   }
   @Get('users')
   getUsers() {
-    return this.userRepository.find({});
+    return this.userRepository.find({
+      // 어떤 프로퍼티를 선택할지
+      // 기본값은 모든 프로퍼티를 가져옴 => select를 정의하지 않았을 때
+      select: {
+        id: true,
+        version: true,
+        profile: {
+          id: true,
+        },
+      },
+      // 필터링할 조건을 입력하게 된다.
+      // where 조건은 & 조건으로 묶인다.
+      // 조건을 or로 설정하고 싶으면 []로 묶는다.
+      where: [
+        {
+          id: 3,
+        },
+        {
+          version: 1,
+        },
+      ],
+      // 관계를 가져오는 방법
+      // relations를 추가한느 순간 where 및 select에서도 사용 가능하다.
+      relations: {
+        profile: true,
+      },
+      // 오름차순, 내림차순 정렬
+      // ASC
+      // DESC
+      order: {
+        id: 'ASC',
+      },
+      // 처음 몇 개를 제외할지 => R의 tail과 동일
+      skip: 0,
+      // 몇 개를 가져올지 => R의 head와 동일
+      take: 10,
+    });
   }
   @Patch('users/:id')
   async patchUser(@Param('id') id: string) {
     const user = await this.userRepository.findOne({
       where: {
-        id: +id,
+        id: parseInt(id),
       },
     });
 
     return this.userRepository.save({
       ...user,
-      // title: user.title + '0',
+      email: user.email + '0',
     });
   }
 

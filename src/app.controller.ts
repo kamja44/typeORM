@@ -2,7 +2,19 @@ import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role, UserModel } from './entity/user.entity';
-import { Repository } from 'typeorm';
+import {
+  Between,
+  ILike,
+  In,
+  IsNull,
+  LessThan,
+  LessThanOrEqual,
+  Like,
+  MoreThan,
+  MoreThanOrEqual,
+  Not,
+  Repository,
+} from 'typeorm';
 import { ProfileModel } from './entity/profile.entity';
 import { PostModel } from './entity/post.entity';
 import { TagModel } from './entity/tag.entity';
@@ -20,49 +32,52 @@ export class AppController {
     private readonly tagRepository: Repository<TagModel>,
   ) {}
   @Post('users')
-  postUser() {
-    return this.userRepository.save({
-      email: '1234@naver.com',
-    });
+  async postUser() {
+    for (let i = 0; i < 100; i++) {
+      await this.userRepository.save({
+        email: `user-${i}@google.com`,
+      });
+    }
   }
   @Get('users')
   getUsers() {
     return this.userRepository.find({
+      where: {
+        // 아닌 경우 가져오기
+        // id: Not(1),
+        // 적은 경우 가져오기
+        // id: LessThan(30),
+        // 적은 경우 or 같은 경우
+        // id: LessThanOrEqual(30),
+        // 더 큰거 가져오기
+        // id: MoreThan(30),
+        // id: MoreThanOrEqual(30),
+        // id: Equal(30),
+        // 유사값
+        // Like 조건
+        // Like 연산의 문제점 => 대소문자 구분 못함
+        // email: Like('%google%'),
+        // 대문자 소문자 구분 안하는 유사값
+        // email: ILike('%GOOGLE%'),
+        // 사이 값
+        // id: Between(10, 15),
+        // 해당되는 여러개의 값
+        // id: In([1, 5, 10, 35]),
+        // id가 Null인 경우
+        // id: IsNull(),
+      },
       // 어떤 프로퍼티를 선택할지
       // 기본값은 모든 프로퍼티를 가져옴 => select를 정의하지 않았을 때
-      select: {
-        id: true,
-        version: true,
-        profile: {
-          id: true,
-        },
-      },
+      // select: {
+      //   id: true,
+      //   version: true,
+      //   profile: {
+      //     id: true,
+      //   },
+      // },
       // 필터링할 조건을 입력하게 된다.
       // where 조건은 & 조건으로 묶인다.
       // 조건을 or로 설정하고 싶으면 []로 묶는다.
-      where: [
-        {
-          id: 3,
-        },
-        {
-          version: 1,
-        },
-      ],
-      // 관계를 가져오는 방법
-      // relations를 추가한느 순간 where 및 select에서도 사용 가능하다.
-      relations: {
-        profile: true,
-      },
-      // 오름차순, 내림차순 정렬
-      // ASC
-      // DESC
-      order: {
-        id: 'ASC',
-      },
-      // 처음 몇 개를 제외할지 => R의 tail과 동일
-      skip: 0,
-      // 몇 개를 가져올지 => R의 head와 동일
-      take: 10,
     });
   }
   @Patch('users/:id')

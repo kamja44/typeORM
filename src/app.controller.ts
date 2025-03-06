@@ -31,6 +31,92 @@ export class AppController {
     @InjectRepository(TagModel)
     private readonly tagRepository: Repository<TagModel>,
   ) {}
+
+  @Post('sample')
+  async sample() {
+    // 모델에 해당되는 객체 생성 - 저장은 안한다.
+    // const user1 = this.userRepository.create({
+    //   email: 'kamja@kamja.co',
+    // });
+
+    // 저장
+    // const user2 = await this.userRepository.save({
+    //   email: 'Test@Test.co',
+    // });
+
+    //preload
+    // 입력된 값을 기반으로 DB에 있는 데이터를 불러오고
+    // 추가로 입력된 값으로 DB에서 가져온 값들을 대체한다.
+    // 저장하지는 않는다. => find와 create가 섞였다고 보면 됨
+    // const user3 = await this.userRepository.preload({
+    //   id: 101,
+    //   email: 'kamja@kamja.kamja',
+    // });
+
+    // 삭제하기
+    // await this.userRepository.delete(101);
+
+    //값을 증가시킴
+    // await this.userRepository.increment(
+    //   {
+    //     id: 1,
+    //   },
+    //   'count',
+    //   2,
+    // );
+
+    // 값을 감소시킴
+    // await this.userRepository.decrement(
+    //   {
+    //     id: 1,
+    //   },
+    //   'count',
+    //   '2',
+    // );
+
+    // 갯수 카운팅하기
+    // const count = await this.userRepository.count({
+    //   where: {
+    //     email: ILike('%0%'),
+    //   },
+    // });
+
+    // sum
+    // const sum = await this.userRepository.sum('count', {
+    //   email: ILike('%0%'),
+    // });
+
+    // average
+    // const average = await this.userRepository.average('count', {
+    //   id: LessThan(4),
+    // });
+
+    // 최소값
+    // const min = await this.userRepository.minimum('count', {
+    //   id: LessThan(4),
+    // });
+
+    // 최대값
+    // const max = await this.userRepository.maximum('count', {
+    //   id: LessThan(4),
+    // });
+
+    // const users = await this.userRepository.find({});
+
+    // const userOne = await this.userRepository.findOne({
+    //   where: {
+    //     id: 10,
+    //   },
+    // });
+
+    // pagination에 사용하는거
+    const usersAndCount = await this.userRepository.findAndCount({
+      take: 3,
+    });
+
+    return usersAndCount;
+  }
+
   @Post('users')
   async postUser() {
     for (let i = 0; i < 100; i++) {
